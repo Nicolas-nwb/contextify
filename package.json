@@ -45,5 +45,9 @@
                 }
             ]
         }
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/Nicolas-nwb/contextify.git"
     }
 }
