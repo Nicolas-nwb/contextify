@@ -5,63 +5,61 @@
  * @description VS Code extension that appends selected files' content to the clipboard context or resets it.
  */
 
-const vscode = require('vscode');
-const fs = require('fs');
-
 /**
- * Append selected files' content to the current clipboard.
- * @param {vscode.Uri|vscode.Uri[]} args
+ * @param {import('vscode').Uri|import('vscode').Uri[]} args
  * @returns {Promise<void>}
+ * Ajoute le contenu des fichiers sélectionnés au presse-papiers.
  */
 async function appendContext(args) {
-    // Retour anticipé si pas d'arguments
-    if (!args) return;
-    const uris = Array.isArray(args) ? args : [args];
-    if (uris.length === 0) return; // Retour anticipé si aucun fichier
+    const vscode = require('vscode');
+    if (!args) {
+        const editor = vscode.window.activeTextEditor;
+        if (!editor) return;
+        args = editor.document.uri;
+    }
 
-    // Lire le presse-papiers actuel
+    const uris = Array.isArray(args) ? args : [args];
+    if (uris.length === 0) return;
+
     const oldContent = await vscode.env.clipboard.readText();
 
-    // Construire le nouveau contenu
     let parts = [];
     for (const uri of uris) {
         const filePath = vscode.workspace.asRelativePath(uri.fsPath);
         const fileData = await vscode.workspace.fs.readFile(uri);
         const fileContent = fileData.toString();
-        // Utiliser une expression régulière pour supprimer les retours à la ligne en début et fin
         const trimmedContent = fileContent.replace(/^(\r\n|\n|\r)+|(\r\n|\n|\r)+$/g, '');
-
         parts.push(`${filePath} :\n"""\n${trimmedContent}\n"""`);
-
     }
 
     const newContent = parts.join('\n\n');
-    const finalContent = oldContent
-        ? `${oldContent}\n\n${newContent}`
-        : newContent;
-
-    // Ecrire dans le presse-papiers
+    const finalContent = oldContent ? `${oldContent}\n\n${newContent}` : newContent;
     await vscode.env.clipboard.writeText(finalContent);
 }
 
 /**
- * Reset the clipboard context.
  * @returns {Promise<void>}
+ * Réinitialise le presse-papiers.
  */
 async function resetContext() {
-    // Réinitialise complètement le contexte
+    const vscode = require('vscode');
     await vscode.env.clipboard.writeText('');
 }
 
 /**
- * @param {vscode.ExtensionContext} context
+ * @param {import('vscode').ExtensionContext} context
+ * Initialise l'extension.
  */
 function activate(context) {
+    const vscode = require('vscode');
     const disposableAdd = vscode.commands.registerCommand('contextify.extract', appendContext);
     const disposableReset = vscode.commands.registerCommand('contextify.reset', resetContext);
     context.subscriptions.push(disposableAdd, disposableReset);
 }
 
+/**
+ * Désactive l'extension.
+ */
 function deactivate() { }
 
 module.exports = {

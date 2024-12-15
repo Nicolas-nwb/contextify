@@ -1,5 +1,5 @@
 # Contextify
-Cette extension ajoute un élément de menu contextuel dans l’explorateur de VS Code.  
+Cette extension ajoute un élément de menu contextuel dans l’explorateur de VS Code et dans l’onglet du fichier ouvert.  
 Sélectionnez un ou plusieurs fichiers, faites un clic droit, puis "Add to Context".  
 L’extension va créer un fichier texte temporaire contenant le chemin relatif de chaque fichier et son contenu entre triple quotes.  
 Le contenu est également automatiquement placé dans le presse-papiers, prêt à être utilisé comme contexte pour un LLM.
