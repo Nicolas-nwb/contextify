@@ -1,0 +1,39 @@
+{
+    "name": "contextify",
+    "displayName": "My Context Extractor",
+    "description": "Extract selected files content into one text for LLM context",
+    "version": "0.0.1",
+    "publisher": "my-publisher",
+    "engines": {
+        "vscode": "^1.80.0"
+    },
+    "activationEvents": [
+        "onCommand:contextify.extract",
+        "onCommand:contextify.reset"
+    ],
+    "main": "./extension.js",
+    "contributes": {
+        "commands": [
+            {
+                "command": "contextify.extract",
+                "title": "Add to Context 📄➕📋"
+            },
+            {
+                "command": "contextify.reset",
+                "title": "Reset Context 🧹📋"
+            }
+        ],
+        "menus": {
+            "explorer/context": [
+                {
+                    "command": "contextify.extract",
+                    "group": "navigation"
+                },
+                {
+                    "command": "contextify.reset",
+                    "group": "navigation"
+                }
+            ]
+        }
+    }
+}
