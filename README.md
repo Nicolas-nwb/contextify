@@ -4,7 +4,7 @@ Select one or more files, right-click, then "Add to Context".
 The extension will create a temporary text file containing the relative path of each file and its content between triple quotes.  
 The content is also automatically placed in the clipboard, ready to be used as context for an LLM.
 
-![alt text](data/img/how-to-use.gif)
+![alt text](assets/how-to-use.gif)
 ## Usage
 1. **Select Files:**
    - In the VS Code file explorer, select one or more files that you want to add to the context.
