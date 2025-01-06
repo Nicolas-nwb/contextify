@@ -12,6 +12,8 @@
  */
 async function appendContext(args) {
     const vscode = require('vscode');
+    const path = require('path');
+
     if (!args) {
         const editor = vscode.window.activeTextEditor;
         if (!editor) return;
@@ -25,8 +27,18 @@ async function appendContext(args) {
 
     let parts = [];
     for (const uri of uris) {
-        // Forcer le second paramètre à false pour éviter l'inclusion du nom de l'espace de travail
-        const filePath = vscode.workspace.asRelativePath(uri.fsPath, false);
+        // Récupère le workspace folder correspondant au fichier
+        const workspaceFolder = vscode.workspace.getWorkspaceFolder(uri);
+
+        // Si le fichier appartient à un workspace folder, on fait un path.relative
+        // Sinon, on utilise la méthode asRelativePath (au cas où c’est un fichier hors workspace)
+        let filePath;
+        if (workspaceFolder) {
+            filePath = path.relative(workspaceFolder.uri.fsPath, uri.fsPath);
+        } else {
+            filePath = vscode.workspace.asRelativePath(uri.fsPath, false);
+        }
+
         const fileData = await vscode.workspace.fs.readFile(uri);
         const fileContent = fileData.toString();
         const trimmedContent = fileContent.replace(/^(\r\n|\n|\r)+|(\r\n|\n|\r)+$/g, '');
