@@ -25,7 +25,8 @@ async function appendContext(args) {
 
     let parts = [];
     for (const uri of uris) {
-        const filePath = vscode.workspace.asRelativePath(uri.fsPath);
+        // Forcer le second paramètre à false pour éviter l'inclusion du nom de l'espace de travail
+        const filePath = vscode.workspace.asRelativePath(uri.fsPath, false);
         const fileData = await vscode.workspace.fs.readFile(uri);
         const fileContent = fileData.toString();
         const trimmedContent = fileContent.replace(/^(\r\n|\n|\r)+|(\r\n|\n|\r)+$/g, '');
