@@ -1,9 +1,9 @@
 {
     "name": "contextify",
-    "displayName": "My Context Extractor",
+    "displayName": "Contextify Extractor for LLM",
     "description": "Extract selected files content into one text for LLM context",
-    "version": "0.0.2",
-    "publisher": "my-publisher",
+    "version": "0.0.3",
+    "publisher": "nowwweb",
     "engines": {
         "vscode": "^1.80.0"
     },
