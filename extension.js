@@ -40,7 +40,7 @@ async function appendContext(args) {
         }
 
         const fileData = await vscode.workspace.fs.readFile(uri);
-        const fileContent = fileData.toString();
+        const fileContent = Buffer.from(fileData).toString('utf8');
         const trimmedContent = fileContent.replace(/^(\r\n|\n|\r)+|(\r\n|\n|\r)+$/g, '');
         parts.push(`${filePath}: """\n${trimmedContent}\n"""`);
     }
