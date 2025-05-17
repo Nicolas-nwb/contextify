@@ -1,8 +1,8 @@
 # Contextify
 This extension adds a context menu item in the VS Code explorer and in the open file tab.  
-Select one or more files, right-click, then "Add to Context".  
-The extension will create a temporary text file containing the relative path of each file and its content between triple quotes.  
-The content is also automatically placed in the clipboard, ready to be used as context for an LLM.
+Select one or more files, right-click, then "Add to Context".
+The extension copies to your clipboard a text containing the relative path of each file and its content between triple quotes.
+You can then paste this text wherever you need it as context for an LLM.
 
 ![usage example](https://raw.githubusercontent.com/Nicolas-nwb/contextify/main/assets/how-to-use.gif)
 
@@ -15,8 +15,8 @@ The content is also automatically placed in the clipboard, ready to be used as c
    - Choose the option **"Add to Context"**.
 
 3. **Result:**
-   - A temporary text file is created containing the relative paths and the content of the selected files.
-   - The content is also automatically copied to your clipboard.
+   - The relative paths and contents of the selected files are copied to your clipboard.
+   - You can now paste this text where you need it.
 
 ## Installation
 - Clone this repository.
