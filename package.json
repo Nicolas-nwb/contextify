@@ -2,7 +2,7 @@
     "name": "contextify",
     "displayName": "Contextify Extractor for LLM",
     "description": "Extract selected files content into one text for LLM context",
-    "version": "0.0.11",
+    "version": "0.0.12",
     "icon": "assets/icon.png",
     "publisher": "nowwweb",
     "extensionKind": [
@@ -49,10 +49,24 @@
                     "group": "navigation"
                 }
             ]
+        },
+        "configuration": {
+            "type": "object",
+            "title": "Contextify Configuration",
+            "properties": {
+                "contextify.ignoreGitIgnore": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Ignore les fichiers et dossiers d\u00e9finis dans .gitignore lors de l'ajout d'un dossier au contexte."
+                }
+            }
         }
     },
     "repository": {
         "type": "git",
         "url": "https://github.com/Nicolas-nwb/contextify.git"
+    },
+    "dependencies": {
+        "ignore": "^5.2.4"
     }
 }
