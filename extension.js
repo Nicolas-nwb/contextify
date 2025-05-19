@@ -10,11 +10,14 @@
  * @param {import('vscode').Uri} uri Dossier de départ
  * @returns {Promise<import('vscode').Uri[]>}
  */
-async function collectFileUris(uri) {
+async function collectFileUris(uri, isIgnored) {
     const vscode = require('vscode');
 
     const stat = await vscode.workspace.fs.stat(uri);
     if (stat.type === vscode.FileType.File) {
+        if (isIgnored && isIgnored(uri)) {
+            return [];
+        }
         return [uri];
     }
 
@@ -23,9 +26,13 @@ async function collectFileUris(uri) {
     for (const [name, type] of entries) {
         const childUri = vscode.Uri.joinPath(uri, name);
         if (type === vscode.FileType.Directory) {
-            files = files.concat(await collectFileUris(childUri));
+            if (!isIgnored || !isIgnored(childUri)) {
+                files = files.concat(await collectFileUris(childUri, isIgnored));
+            }
         } else if (type === vscode.FileType.File) {
-            files.push(childUri);
+            if (!isIgnored || !isIgnored(childUri)) {
+                files.push(childUri);
+            }
         }
     }
     return files;
@@ -39,6 +46,7 @@ async function collectFileUris(uri) {
 async function appendContext(args) {
     const vscode = require('vscode');
     const path = require('path');
+    const ignore = require('ignore');
 
     if (!args) {
         const editor = vscode.window.activeTextEditor;
@@ -51,9 +59,38 @@ async function appendContext(args) {
 
     const oldContent = await vscode.env.clipboard.readText();
 
+    const config = vscode.workspace.getConfiguration('contextify');
+    const ignoreGit = config.get('ignoreGitIgnore', true);
+    let matchers = [];
+    let isIgnored = null;
+
+    if (ignoreGit) {
+        const folders = vscode.workspace.workspaceFolders || [];
+        for (const folder of folders) {
+            const ig = ignore();
+            try {
+                const data = await vscode.workspace.fs.readFile(vscode.Uri.joinPath(folder.uri, '.gitignore'));
+                ig.add(Buffer.from(data).toString('utf8'));
+            } catch (err) {
+                // pas de .gitignore
+            }
+            matchers.push({ folder, ig });
+        }
+        isIgnored = (uri) => {
+            for (const { folder, ig } of matchers) {
+                const rel = path.relative(folder.uri.fsPath, uri.fsPath);
+                const relPosix = rel.split(path.sep).join('/');
+                if (!relPosix.startsWith('..') && ig.ignores(relPosix)) {
+                    return true;
+                }
+            }
+            return false;
+        };
+    }
+
     let parts = [];
     for (const rootUri of uris) {
-        const files = await collectFileUris(rootUri);
+        const files = await collectFileUris(rootUri, isIgnored);
         for (const uri of files) {
             // Récupère le workspace folder correspondant au fichier
             const workspaceFolder = vscode.workspace.getWorkspaceFolder(uri);

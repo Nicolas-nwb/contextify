@@ -16,12 +16,16 @@ You can then paste this text wherever you need it as context for an LLM.
 
 3. **Result:**
    - The relative paths and contents of the selected files are copied to your clipboard. If you selected a folder, all files inside it (and its subfolders) are included.
+   - Files and folders listed in `.gitignore` are skipped by default when adding a directory.
    - You can now paste this text where you need it.
 
 ## Installation
 - Clone this repository.
 - Open in VS Code.
 - Launch the extension with F5.
+
+## Configuration
+- `contextify.ignoreGitIgnore` *(boolean)* : ignore les chemins listés dans `.gitignore` lors de l'ajout d'un dossier (activé par défaut).
 ## Deploying the Extension for Use Outside the Marketplace
 If you want to share your extension without going through the VS Code Marketplace, you can create a `.vsix` file that other users can install manually.
 
