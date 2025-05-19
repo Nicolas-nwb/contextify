@@ -79,7 +79,8 @@ async function appendContext(args) {
         isIgnored = (uri) => {
             for (const { folder, ig } of matchers) {
                 const rel = path.relative(folder.uri.fsPath, uri.fsPath);
-                if (!rel.startsWith('..') && ig.ignores(rel)) {
+                const relPosix = rel.split(path.sep).join('/');
+                if (!relPosix.startsWith('..') && ig.ignores(relPosix)) {
                     return true;
                 }
             }
