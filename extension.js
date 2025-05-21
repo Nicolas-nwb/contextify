@@ -90,7 +90,10 @@ async function appendContext(args) {
 
     let parts = [];
     for (const rootUri of uris) {
-        const files = await collectFileUris(rootUri, isIgnored);
+        const stat = await vscode.workspace.fs.stat(rootUri);
+        // Si la sélection porte sur un fichier individuel, on l'ajoute même s'il est listé dans .gitignore
+        const ignoreForRoot = stat.type === vscode.FileType.Directory ? isIgnored : null;
+        const files = await collectFileUris(rootUri, ignoreForRoot);
         for (const uri of files) {
             // Récupère le workspace folder correspondant au fichier
             const workspaceFolder = vscode.workspace.getWorkspaceFolder(uri);
